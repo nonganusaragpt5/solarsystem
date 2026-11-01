@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>แบบทดสอบวิทยาศาสตร์ ป.6 เรื่องระบบสุริยะ</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#edf4fb;color:#172b45;font-family:Tahoma,"Noto Sans Thai",sans-serif;line-height:1.65}
+header{background:linear-gradient(120deg,#282b70,#426fc0);color:#fff;text-align:center;padding:27px 15px 23px;border-bottom:7px solid #f4d37b}
+.tag{display:inline-block;background:#ffffff22;border:1px solid #ffffff66;border-radius:25px;padding:3px 14px;font-size:14px}
+h1{font-size:clamp(23px,4vw,33px);margin:9px 0 4px}
+header p{margin:0;color:#e8efff}
+.wrap{max-width:900px;margin:24px auto;padding:0 14px 35px}
+.panel{background:#fff;border-radius:16px;padding:22px;box-shadow:0 5px 22px #183b6214;margin-bottom:18px}
+.meta{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:#45617d;font-size:14px}
+.progress{height:10px;background:#e5edf6;border-radius:20px;overflow:hidden;margin:12px 0}
+.bar{height:100%;width:0;background:linear-gradient(90deg,#426fc0,#8c8de0);transition:width .2s}
+.qcard{border:1px solid #dce7f2;border-radius:14px;padding:18px;margin:15px 0}
+.qhead{font-weight:bold;color:#283b83;font-size:18px;margin-bottom:8px}
+.stem{font-size:17px;margin:0 0 12px}
+.options{display:grid;gap:9px}
+.option{display:flex;gap:10px;align-items:flex-start;padding:11px 13px;border:1px solid #d6e1ed;border-radius:10px;cursor:pointer;background:#fbfdff}
+.option:hover{border-color:#718ad2;background:#f3f5ff}
+.option input{margin-top:6px;accent-color:#405fb4;transform:scale(1.1)}
+.option:has(input:checked){border-color:#526dc2;background:#eff2ff}
+button{border:0;border-radius:10px;padding:12px 20px;font-size:16px;font-weight:bold;cursor:pointer}
+.primary{background:#405fb4;color:#fff}.primary:hover{background:#304b96}
+.secondary{background:#e8edf9;color:#304b86}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:22px 0}
+#result{display:none;text-align:center}
+.score{font-size:46px;font-weight:bold;color:#16834b;margin:8px}
+.result-note{font-size:19px;margin-bottom:16px}
+.review{text-align:left;background:#f2f5fd;border-left:5px solid #526dc2;padding:14px 16px;margin:12px 0;border-radius:0 9px 9px 0}
+.review.wrong{border-left-color:#c0392b}
+.review strong{display:block;margin-bottom:5px}
+.explain{margin-top:5px;color:#294b6d}
+.small,footer{font-size:13px;color:#70849a}
+footer{text-align:center;padding:10px}
+@media(max-width:600px){.panel{padding:15px}.qcard{padding:14px}.stem{font-size:16px}.option{font-size:15px}}
+</style>
+</head>
+<body>
+<header>
+<span class="tag">แบบฝึกทบทวนเตรียมสอบ O-NET • วิทยาศาสตร์ ป.6</span>
+<h1>ระบบสุริยะ</h1>
+<p>ดวงอาทิตย์ • ดาวเคราะห์ • การโคจร • การหมุนรอบตัวเอง</p>
+</header>
+<main class="wrap">
+<section class="panel" id="quizPanel">
+<div class="meta"><span>จำนวน 10 ข้อ · เลือกคำตอบที่ถูกต้องที่สุดเพียงข้อเดียว</span><span id="count">ตอบแล้ว 0 / 10 ข้อ</span></div>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<div id="questions"></div>
+<div class="actions"><button class="primary" onclick="submitQuiz()">ตรวจคำตอบ</button><button class="secondary" onclick="resetQuiz()">เริ่มทำใหม่</button></div>
+<p class="small" style="text-align:center">เมื่อตรวจคำตอบแล้ว ระบบจะแสดงคะแนน เฉลย และคำอธิบายรายข้อ</p>
+</section>
+<section class="panel" id="result">
+<div style="font-weight:bold;color:#315779">ผลการทำแบบทดสอบ</div>
+<div class="score" id="score">0 / 10 คะแนน</div>
+<div class="result-note" id="note"></div>
+<div id="reviews"></div>
+<div class="actions"><button class="primary" onclick="resetQuiz()">ทำแบบทดสอบอีกครั้ง</button></div>
+</section>
+<footer>จัดทำเพื่อการฝึกทบทวนความรู้ วิทยาศาสตร์ระดับประถมศึกษาปีที่ 6</footer>
+</main>
+<script>
+const data=[
+{q:"ข้อใดอธิบายความสัมพันธ์ระหว่างดวงอาทิตย์กับดาวเคราะห์ในระบบสุริยะได้ถูกต้อง",a:["ดวงอาทิตย์โคจรรอบโลก และดาวเคราะห์โคจรรอบดวงอาทิตย์","ดวงอาทิตย์เป็นดาวฤกษ์ และดาวเคราะห์โคจรรอบดวงอาทิตย์","ดวงอาทิตย์เป็นดาวเคราะห์ที่มีขนาดใหญ่ที่สุด","ดาวเคราะห์ทุกดวงมีแสงสว่างในตัวเอง"],c:1,e:"ดวงอาทิตย์เป็นดาวฤกษ์ที่แผ่พลังงานได้เอง ส่วนดาวเคราะห์ในระบบสุริยะโคจรรอบดวงอาทิตย์"},
+{q:"หากเรียงดาวเคราะห์ 4 ดวงแรกจากดวงที่อยู่ใกล้ดวงอาทิตย์มากที่สุดไปไกลที่สุด ข้อใดถูกต้อง",a:["โลก ดาวศุกร์ ดาวพุธ ดาวอังคาร","ดาวพุธ ดาวศุกร์ โลก ดาวอังคาร","ดาวศุกร์ ดาวพุธ ดาวอังคาร โลก","ดาวพุธ โลก ดาวศุกร์ ดาวอังคาร"],c:1,e:"ลำดับดาวเคราะห์ 4 ดวงแรกจากดวงอาทิตย์คือ ดาวพุธ ดาวศุกร์ โลก และดาวอังคาร"},
+{q:"นักเรียนสังเกตว่าดาวเคราะห์ชั้นในมีพื้นผิวเป็นหินและมีขนาดค่อนข้างเล็ก ข้อใดเป็นกลุ่มดาวเคราะห์ชั้นใน",a:["ดาวพุธ ดาวศุกร์ โลก และดาวอังคาร","ดาวพฤหัสบดี ดาวเสาร์ ดาวยูเรนัส และดาวเนปจูน","โลก ดาวพฤหัสบดี ดาวเสาร์ และดาวเนปจูน","ดาวอังคาร ดาวพฤหัสบดี ดาวยูเรนัส และดาวเนปจูน"],c:0,e:"ดาวเคราะห์ชั้นใน ได้แก่ ดาวพุธ ดาวศุกร์ โลก และดาวอังคาร ซึ่งเป็นดาวเคราะห์หิน"},
+{q:"ดาวเคราะห์ดวงใดมีขนาดใหญ่ที่สุดในระบบสุริยะ",a:["ดาวเสาร์","ดาวเนปจูน","ดาวพฤหัสบดี","โลก"],c:2,e:"ดาวพฤหัสบดีเป็นดาวเคราะห์ที่มีขนาดใหญ่ที่สุดในระบบสุริยะ"},
+{q:"เหตุใดเราจึงมองเห็นดวงจันทร์สว่างในเวลากลางคืน",a:["ดวงจันทร์สร้างแสงได้เองเหมือนดวงอาทิตย์","ดวงจันทร์สะท้อนแสงจากดวงอาทิตย์มายังโลก","โลกส่งแสงไปยังดวงจันทร์","ดาวฤกษ์ทุกดวงรวมแสงไว้ที่ดวงจันทร์"],c:1,e:"ดวงจันทร์ไม่มีแสงสว่างในตัวเอง แสงที่เราเห็นเกิดจากแสงอาทิตย์สะท้อนจากพื้นผิวดวงจันทร์"},
+{q:"โลกหมุนรอบตัวเองครบหนึ่งรอบใช้เวลาประมาณเท่าใด และทำให้เกิดปรากฏการณ์ใด",a:["ประมาณ 24 ชั่วโมง ทำให้เกิดกลางวันและกลางคืน","ประมาณ 365 วัน ทำให้เกิดกลางวันและกลางคืน","ประมาณ 24 ชั่วโมง ทำให้เกิดฤดูกาล","ประมาณ 30 วัน ทำให้เกิดข้างขึ้นและข้างแรม"],c:0,e:"โลกหมุนรอบตัวเองใช้เวลาประมาณ 24 ชั่วโมง ทำให้บริเวณที่หันเข้าหาดวงอาทิตย์เป็นกลางวัน และบริเวณที่หันออกเป็นกลางคืน"},
+{q:"โลกโคจรรอบดวงอาทิตย์ครบหนึ่งรอบใช้เวลาประมาณเท่าใด",a:["หนึ่งวัน","หนึ่งเดือน","หนึ่งปี","สิบปี"],c:2,e:"โลกใช้เวลาประมาณ 365 วัน หรือหนึ่งปี ในการโคจรรอบดวงอาทิตย์ครบหนึ่งรอบ"},
+{q:"ดาวเคราะห์ดวงใดมีวงแหวนที่เห็นได้เด่นชัดมาก",a:["ดาวพุธ","ดาวศุกร์","ดาวเสาร์","ดาวอังคาร"],c:2,e:"ดาวเสาร์มีระบบวงแหวนที่เด่นชัด ประกอบด้วยอนุภาคน้ำแข็ง หิน และฝุ่นจำนวนมาก"},
+{q:"ยานสำรวจเดินทางจากโลกไปยังดาวอังคาร ข้อใดอธิบายตำแหน่งของดาวอังคารในระบบสุริยะได้ถูกต้อง",a:["อยู่ระหว่างดาวพุธกับดาวศุกร์","เป็นดาวเคราะห์ลำดับที่ 4 จากดวงอาทิตย์","อยู่ถัดจากดาวพฤหัสบดีออกไป","เป็นดาวเคราะห์ที่อยู่ใกล้ดวงอาทิตย์ที่สุด"],c:1,e:"ดาวอังคารเป็นดาวเคราะห์ลำดับที่ 4 จากดวงอาทิตย์ อยู่ถัดจากโลกออกไป"},
+{q:"ข้อใดกล่าวถึงดาวเคราะห์และดาวฤกษ์ได้ถูกต้อง",a:["ดาวเคราะห์มีแสงในตัวเอง ส่วนดาวฤกษ์สะท้อนแสง","ดาวฤกษ์มีแสงในตัวเอง ส่วนดาวเคราะห์มองเห็นได้จากแสงที่สะท้อน","ดาวเคราะห์ทุกดวงมีขนาดใหญ่กว่าดาวฤกษ์","ดาวฤกษ์ทุกดวงโคจรรอบโลก"],c:1,e:"ดาวฤกษ์สร้างและแผ่พลังงานแสงได้เอง ส่วนดาวเคราะห์ไม่เปล่งแสงที่มองเห็นได้เอง แต่สะท้อนแสงจากดาวฤกษ์"}
+];
+const letters=["ก","ข","ค","ง"],box=document.getElementById("questions");
+function render(){box.innerHTML="";data.forEach((it,i)=>{let d=document.createElement("div");d.className="qcard";
+d.innerHTML=`<div class="qhead">ข้อ ${i+1}</div><p class="stem">${it.q}</p><div class="options">${it.a.map((v,j)=>`<label class="option"><input type="radio" name="q${i}" value="${j}" onchange="updateProgress()"><span><b>${letters[j]}.</b> ${v}</span></label>`).join("")}</div>`;box.appendChild(d)});updateProgress()}
+function updateProgress(){let n=data.filter((_,i)=>document.querySelector(`input[name="q${i}"]:checked`)).length;document.getElementById("count").textContent=`ตอบแล้ว ${n} / 10 ข้อ`;document.getElementById("bar").style.width=n*10+"%"}
+function submitQuiz(){let miss=data.findIndex((_,i)=>!document.querySelector(`input[name="q${i}"]:checked`));if(miss!==-1){alert(`ยังไม่ได้ตอบข้อ ${miss+1} ครับ`);document.querySelector(`input[name="q${miss}"]`).focus();return}
+let score=0,html="";data.forEach((it,i)=>{let chosen=Number(document.querySelector(`input[name="q${i}"]:checked`).value),ok=chosen===it.c;if(ok)score++;
+html+=`<div class="review ${ok?"":"wrong"}"><strong>ข้อ ${i+1}: ${ok?"ตอบถูก ✓":"ตอบไม่ถูก ✗"}</strong><div>คำตอบของนักเรียน: ${letters[chosen]}. ${it.a[chosen]}</div><div><b>เฉลย: ${letters[it.c]}. ${it.a[it.c]}</b></div><div class="explain">${it.e}</div></div>`});
+document.getElementById("score").textContent=`${score} / 10 คะแนน`;document.getElementById("note").textContent=score===10?"ยอดเยี่ยม! เข้าใจเนื้อหาได้ดีมาก":score>=7?"ทำได้ดีมาก ลองทบทวนข้อที่ยังผิดอีกนิดนะ":"ไม่เป็นไรครับ อ่านคำอธิบายแล้วลองทำใหม่ได้เลย";
+document.getElementById("reviews").innerHTML=html;document.getElementById("quizPanel").style.display="none";document.getElementById("result").style.display="block";window.scrollTo({top:0,behavior:"smooth"})}
+function resetQuiz(){document.getElementById("result").style.display="none";document.getElementById("quizPanel").style.display="block";render();window.scrollTo({top:0,behavior:"smooth"})}
+render();
+</script>
+</body></html>
